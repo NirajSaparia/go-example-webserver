@@ -4,13 +4,13 @@ pipeline:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
     commands:
-      - docker build -t NirajSaparia/example-webserver:$DRONE_COMMIT_SHA .
+      - docker build -t nsaparia/example-webserver:$DRONE_COMMIT_SHA .
   test:
     image: docker
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
     commands:
-      - docker run NirajSaparia/example-webserver:$DRONE_COMMIT_SHA /test.sh
+      - docker run nsaparia/example-webserver:$DRONE_COMMIT_SHA /test.sh
   push:
     image: docker
     volumes:
@@ -18,14 +18,14 @@ pipeline:
   environment:
       - PASS=${HUB_PASS}
     commands:
-      - docker login -u NirajSaparia -p $PASS
-      - docker push NirajSaparia/example-webserver:$DRONE_COMMIT_SHA
+      - docker login -u nsaparia -p $PASS
+      - docker push nsaparia/example-webserver:$DRONE_COMMIT_SHA
   deploy:
     image: docker
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
     commands:
-      - docker pull NirajSaparia/example-webserver:$DRONE_COMMIT_SHA
-      - docker tag NirajSaparia/example-webserver:$DRONE_COMMIT_SHA
-             NirajSaparia/example-webserver:production
+      - docker pull nsaparia/example-webserver:$DRONE_COMMIT_SHA
+      - docker tag nsaparia/example-webserver:$DRONE_COMMIT_SHA
+             nsaparia/example-webserver:production
       - docker stack deploy -c ./docker-compose.yml example-webserver
