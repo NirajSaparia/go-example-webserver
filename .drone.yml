@@ -4,28 +4,28 @@ pipeline:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
     commands:
-- docker build -t nsaparia/example-webserver:$DRONE_COMMIT_SHA .
-test:
-  image: docker
-  volumes:
-    - /var/run/docker.sock:/var/run/docker.sock
-  commands:
-    - docker run nsaparia/example-webserver:$DRONE_COMMIT_SHA /test.sh
-push:
-  image: docker
-  volumes:
-    - /var/run/docker.sock:/var/run/docker.sock
+      - docker build -t nsaparia/example-webserver:$DRONE_COMMIT_SHA .
+  test:
+    image: docker
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    commands:
+      - docker run nsaparia/example-webserver:$DRONE_COMMIT_SHA /test.sh
+  push:
+    image: docker
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
   environment:
-    - PASS=${HUB_PASS}
-  commands:
-    - docker login -u nsaparia -p $PASS
-    - docker push nsaparia/example-webserver:$DRONE_COMMIT_SHA
-deploy:
-  image: docker
-  volumes:
-    - /var/run/docker.sock:/var/run/docker.sock
-  commands:
-    - docker pull nsaparia/example-webserver:$DRONE_COMMIT_SHA
-    - docker tag nsaparia/example-webserver:$DRONE_COMMIT_SHA
+      - PASS=${HUB_PASS}
+    commands:
+      - docker login -u nsaparia -p $PASS
+      - docker push nsaparia/example-webserver:$DRONE_COMMIT_SHA
+  deploy:
+    image: docker
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    commands:
+      - docker pull nsaparia/example-webserver:$DRONE_COMMIT_SHA
+      - docker tag nsaparia/example-webserver:$DRONE_COMMIT_SHA
              nsaparia/example-webserver:latest
-    - docker stack deploy -c ./docker-compose.yml example-webserver
+      - docker stack deploy -c ./docker-compose.yml example-webserver
