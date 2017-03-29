@@ -26,6 +26,5 @@ pipeline:
       - /var/run/docker.sock:/var/run/docker.sock
     commands:
       - docker pull nsaparia/example-webserver:$DRONE_COMMIT_SHA
-      - docker tag nsaparia/example-webserver:$DRONE_COMMIT_SHA
-             nsaparia/example-webserver:production
+      - docker tag nsaparia/example-webserver:$DRONE_COMMIT_SHA nsaparia/example-webserver:production
       - docker stack deploy -c ./docker-compose.yml example-webserver
