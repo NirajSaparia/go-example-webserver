@@ -13,11 +13,11 @@ test:
     - docker run nsaparia/example-webserver /test.sh
 
   push:
-      image: docker
-      environment:
-        - PASS=${HUB_PASS}
-      volumes:
-        - /var/run/docker.sock:/var/run/docker.sock
-      commands:
-        - docker login -u nsaparia -p $PASS
-        - docker push nsaparia/example-webserver
+    image: docker
+    environment:
+      - PASS=${HUB_PASS}
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    commands:
+      - docker login -u nsaparia -p $PASS
+      - docker push nsaparia/example-webserver
