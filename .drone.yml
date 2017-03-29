@@ -11,7 +11,6 @@ pipeline:
       - /var/run/docker.sock:/var/run/docker.sock
     commands:
       - docker run nsaparia/example-webserver /test.sh
-
   push:
     image: docker
     environment:
@@ -21,3 +20,10 @@ pipeline:
     commands:
       - docker login -u nsaparia -p $PASS
       - docker push nsaparia/example-webserver
+    deploy:
+      image: docker
+      volumes:
+        - /var/run/docker.sock:/var/run/docker.sock
+      commands:
+        - docker pull nsaparia/example-webserver
+        - docker stack deploy -c ./docker-compose.yml example-webserver
